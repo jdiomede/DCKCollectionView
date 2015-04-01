@@ -14,6 +14,8 @@
 		5C6443EE1ACA152D005FEE28 /* DCKCollectionViewTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C6443ED1ACA152D005FEE28 /* DCKCollectionViewTests.m */; };
 		5C6443F91ACA154A005FEE28 /* ExampleCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C6443F81ACA154A005FEE28 /* ExampleCollectionViewController.m */; };
 		5C6443FF1ACA4CD0005FEE28 /* DCKCollectionViewLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C6443FE1ACA4CD0005FEE28 /* DCKCollectionViewLayout.m */; };
+		5C6444081ACC8DB9005FEE28 /* ExampleCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C6444071ACC8DB9005FEE28 /* ExampleCollectionViewCell.m */; };
+		5C6444671ACCA369005FEE28 /* libImageLoaderKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C6444661ACCA365005FEE28 /* libImageLoaderKit.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -23,6 +25,27 @@
 			proxyType = 1;
 			remoteGlobalIDString = 5C6443CD1ACA152D005FEE28;
 			remoteInfo = DCKCollectionView;
+		};
+		5C64445E1ACCA094005FEE28 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5C6444591ACCA093005FEE28 /* ILKImageLoader.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 66F1724F1735C6C800C2120B;
+			remoteInfo = ILKImageLoader;
+		};
+		5C6444621ACCA365005FEE28 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5C6444591ACCA093005FEE28 /* ILKImageLoader.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 5C64443C1ACC9DDB005FEE28;
+			remoteInfo = ImageLoaderKit;
+		};
+		5C6444651ACCA365005FEE28 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5C6444591ACCA093005FEE28 /* ILKImageLoader.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 5C64443D1ACC9DDB005FEE28;
+			remoteInfo = ImageLoaderKit;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -41,6 +64,9 @@
 		5C6443F81ACA154A005FEE28 /* ExampleCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExampleCollectionViewController.m; sourceTree = "<group>"; };
 		5C6443FD1ACA4CD0005FEE28 /* DCKCollectionViewLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DCKCollectionViewLayout.h; sourceTree = SOURCE_ROOT; };
 		5C6443FE1ACA4CD0005FEE28 /* DCKCollectionViewLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DCKCollectionViewLayout.m; sourceTree = SOURCE_ROOT; };
+		5C6444061ACC8DB9005FEE28 /* ExampleCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExampleCollectionViewCell.h; sourceTree = "<group>"; };
+		5C6444071ACC8DB9005FEE28 /* ExampleCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExampleCollectionViewCell.m; sourceTree = "<group>"; };
+		5C6444591ACCA093005FEE28 /* ILKImageLoader.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ILKImageLoader.xcodeproj; path = ILKImageLoader/ILKImageLoader.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -48,6 +74,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5C6444671ACCA369005FEE28 /* libImageLoaderKit.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -64,6 +91,7 @@
 		5C6443C51ACA152D005FEE28 = {
 			isa = PBXGroup;
 			children = (
+				5C6444591ACCA093005FEE28 /* ILKImageLoader.xcodeproj */,
 				5C6443D01ACA152D005FEE28 /* DCKCollectionView */,
 				5C6443EA1ACA152D005FEE28 /* DCKCollectionViewTests */,
 				5C6443CF1ACA152D005FEE28 /* Products */,
@@ -86,6 +114,8 @@
 				5C6443D61ACA152D005FEE28 /* AppDelegate.m */,
 				5C6443FD1ACA4CD0005FEE28 /* DCKCollectionViewLayout.h */,
 				5C6443FE1ACA4CD0005FEE28 /* DCKCollectionViewLayout.m */,
+				5C6444061ACC8DB9005FEE28 /* ExampleCollectionViewCell.h */,
+				5C6444071ACC8DB9005FEE28 /* ExampleCollectionViewCell.m */,
 				5C6443F71ACA154A005FEE28 /* ExampleCollectionViewController.h */,
 				5C6443F81ACA154A005FEE28 /* ExampleCollectionViewController.m */,
 				5C6443DE1ACA152D005FEE28 /* Images.xcassets */,
@@ -121,6 +151,15 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		5C64445A1ACCA093005FEE28 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5C64445F1ACCA094005FEE28 /* ILKImageLoader.app */,
+				5C6444661ACCA365005FEE28 /* libImageLoaderKit.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -135,6 +174,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				5C6444631ACCA365005FEE28 /* PBXTargetDependency */,
 			);
 			name = DCKCollectionView;
 			productName = DCKCollectionView;
@@ -188,6 +228,12 @@
 			mainGroup = 5C6443C51ACA152D005FEE28;
 			productRefGroup = 5C6443CF1ACA152D005FEE28 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 5C64445A1ACCA093005FEE28 /* Products */;
+					ProjectRef = 5C6444591ACCA093005FEE28 /* ILKImageLoader.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				5C6443CD1ACA152D005FEE28 /* DCKCollectionView */,
@@ -195,6 +241,23 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		5C64445F1ACCA094005FEE28 /* ILKImageLoader.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = ILKImageLoader.app;
+			remoteRef = 5C64445E1ACCA094005FEE28 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		5C6444661ACCA365005FEE28 /* libImageLoaderKit.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libImageLoaderKit.a;
+			remoteRef = 5C6444651ACCA365005FEE28 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		5C6443CC1ACA152D005FEE28 /* Resources */ = {
@@ -221,6 +284,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5C6443F91ACA154A005FEE28 /* ExampleCollectionViewController.m in Sources */,
+				5C6444081ACC8DB9005FEE28 /* ExampleCollectionViewCell.m in Sources */,
 				5C6443D71ACA152D005FEE28 /* AppDelegate.m in Sources */,
 				5C6443D41ACA152D005FEE28 /* main.m in Sources */,
 				5C6443FF1ACA4CD0005FEE28 /* DCKCollectionViewLayout.m in Sources */,
@@ -242,6 +306,11 @@
 			isa = PBXTargetDependency;
 			target = 5C6443CD1ACA152D005FEE28 /* DCKCollectionView */;
 			targetProxy = 5C6443E81ACA152D005FEE28 /* PBXContainerItemProxy */;
+		};
+		5C6444631ACCA365005FEE28 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = ImageLoaderKit;
+			targetProxy = 5C6444621ACCA365005FEE28 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -291,6 +360,11 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"$(PROJECT_DIR)/../ILKImageLoader/",
+				);
 				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -327,6 +401,11 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"$(PROJECT_DIR)/../ILKImageLoader/",
+				);
 				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
@@ -341,6 +420,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = DCKCollectionView/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_LDFLAGS = "-all_load";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -351,6 +431,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = DCKCollectionView/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_LDFLAGS = "-all_load";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -408,6 +489,7 @@
 				5C6443F31ACA152D005FEE28 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		5C6443F41ACA152D005FEE28 /* Build configuration list for PBXNativeTarget "DCKCollectionViewTests" */ = {
 			isa = XCConfigurationList;
@@ -416,6 +498,7 @@
 				5C6443F61ACA152D005FEE28 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

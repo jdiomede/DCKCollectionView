@@ -8,13 +8,15 @@
 
 #import "ExampleCollectionViewController.h"
 
+#import "ExampleCollectionViewCell.h"
+
 @interface ExampleCollectionViewController ()
 
 @end
 
 @implementation ExampleCollectionViewController
 
-static NSString * const reuseIdentifier = @"Cell";
+static NSString * const reuseIdentifier = @"ExampleCollectionViewCell";
 
 - (instancetype)initWithCollectionViewLayout:(UICollectionViewLayout *)layout {
   self = [super initWithCollectionViewLayout:layout];
@@ -26,7 +28,7 @@ static NSString * const reuseIdentifier = @"Cell";
 
 - (void)viewDidLoad {
   [super viewDidLoad];
-  [self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:reuseIdentifier];
+  [self.collectionView registerClass:[ExampleCollectionViewCell class] forCellWithReuseIdentifier:reuseIdentifier];
   self.collectionView.backgroundColor = [UIColor whiteColor];
   self.collectionView.alwaysBounceVertical = YES;
 }
