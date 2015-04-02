@@ -8,10 +8,11 @@
 
 #import "ExampleCollectionViewController.h"
 
+#import "DCKCollectionViewLayout.h"
 #import "ExampleCollectionViewCell.h"
 
-@interface ExampleCollectionViewController ()
-
+@interface ExampleCollectionViewController () <DCKCollectionViewLayoutDelegate>
+@property (nonatomic, strong) NSArray *imageSections;
 @end
 
 @implementation ExampleCollectionViewController
@@ -21,7 +22,7 @@ static NSString * const reuseIdentifier = @"ExampleCollectionViewCell";
 - (instancetype)initWithCollectionViewLayout:(UICollectionViewLayout *)layout {
   self = [super initWithCollectionViewLayout:layout];
   if (self) {
-    
+    _imageSections = [NSArray array];
   }
   return self;
 }
@@ -29,32 +30,44 @@ static NSString * const reuseIdentifier = @"ExampleCollectionViewCell";
 - (void)viewDidLoad {
   [super viewDidLoad];
   [self.collectionView registerClass:[ExampleCollectionViewCell class] forCellWithReuseIdentifier:reuseIdentifier];
+  self.title = @"Recent Photos on Flickr";
   self.collectionView.backgroundColor = [UIColor whiteColor];
   self.collectionView.alwaysBounceVertical = YES;
+  [self refreshImageUrls];
 }
 
 - (void)didReceiveMemoryWarning {
   [super didReceiveMemoryWarning];
 }
 
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+  [self.collectionViewLayout invalidateLayout];
+}
+
 #pragma mark <UICollectionViewDataSource>
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
-  return 1;
+  return self.imageSections.count;
 }
 
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-  return 20;
+  return ((NSArray*)self.imageSections[section]).count;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-  UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
-  
-  cell.layer.borderWidth = 1.0;
-  cell.layer.borderColor = [UIColor blackColor].CGColor;
-  
+  ExampleCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
+  if (![self.imageSections[indexPath.section][indexPath.row] isEqual:cell.ilkImageView.urlString]) {
+    cell.ilkImageView.image = nil;
+    cell.ilkImageView.urlString = self.imageSections[indexPath.section][indexPath.row];
+  }
   return cell;
+}
+
+#pragma mark <DCKCollectionViewLayoutDelegate>
+
+- (NSArray *)imageSectionsForCollectionView {
+  return self.imageSections;
 }
 
 #pragma mark <UICollectionViewDelegate>
@@ -87,5 +100,42 @@ static NSString * const reuseIdentifier = @"ExampleCollectionViewCell";
 	
 }
 */
+
+- (void)refreshImageUrls {
+  NSString *httpHostAndPath = @"https://api.flickr.com/services/rest";
+  NSString *httpUrlParamters = [NSString stringWithFormat:@"%@%@%@%@",
+                                @"?api_key=496a5ec35ff7653a836f70b1d9c7eac0",
+                                @"&method=flickr.photos.getRecent",
+                                @"&format=json",
+                                @"&nojsoncallback=1"];
+  NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", httpHostAndPath, httpUrlParamters]];
+  NSURLRequest *request = [NSURLRequest requestWithURL:url];
+  NSURLSessionDataTask *dataTask = [[NSURLSession sharedSession] dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+    NSError *parseError = NULL;
+    NSDictionary *responseDict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&parseError];
+    NSDictionary *photos = [responseDict valueForKey:@"photos"];
+    NSArray *photoArray = [photos valueForKey:@"photo"];
+    NSMutableArray *mutableArray = [NSMutableArray array];
+    for (NSDictionary *photo in photoArray) {
+      //http://farm{farm-id}.staticflickr.com/{server-id}/{id}_{secret}.jpg
+      NSString *photoUrl = [NSString stringWithFormat:@"http://farm%@.staticflickr.com/%@/%@_%@.jpg",
+                            [photo valueForKey:@"farm"],
+                            [photo valueForKey:@"server"],
+                            [photo valueForKey:@"id"],
+                            [photo valueForKey:@"secret"]];
+      [mutableArray addObject:photoUrl];
+    }
+    dispatch_async(dispatch_get_main_queue(), ^{
+      self.imageSections = [NSArray arrayWithObject:mutableArray.copy];
+      [self.collectionView performBatchUpdates:^{
+        [self.collectionView deleteSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, self.collectionView.numberOfSections)]];
+        [self.collectionView insertSections:[NSIndexSet indexSetWithIndex:0]];
+      } completion:nil];
+    });
+  }];
+  [dataTask resume];
+}
+
+
 
 @end

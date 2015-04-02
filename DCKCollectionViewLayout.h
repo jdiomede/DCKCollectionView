@@ -8,6 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol DCKCollectionViewLayoutDelegate <NSObject>
+
+// If we needed to know more about the data
+- (NSArray*)imageSectionsForCollectionView;
+
+@end
+
 @interface DCKCollectionViewLayout : UICollectionViewLayout
 
 @end

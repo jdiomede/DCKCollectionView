@@ -8,6 +8,8 @@
 
 #import "AppDelegate.h"
 
+#import "DCKCollectionViewLayout.h"
+
 @interface AppDelegate ()
 
 @end

@@ -14,6 +14,13 @@
   self = [super initWithFrame:frame];
   if (self) {
     _ilkImageView = [[ILKImageView alloc] initWithFrame:frame];
+    _ilkImageView.translatesAutoresizingMaskIntoConstraints = NO;
+    _ilkImageView.contentMode = UIViewContentModeScaleAspectFill;
+    _ilkImageView.clipsToBounds = YES;
+    [self.contentView addSubview:_ilkImageView];
+    NSDictionary *views = @{@"ilkImageView":_ilkImageView};
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[ilkImageView]|" options:0 metrics:nil views:views]];
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[ilkImageView]|" options:0 metrics:nil views:views]];
   }
   return self;
 }
