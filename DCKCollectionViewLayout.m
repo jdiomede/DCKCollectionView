@@ -34,6 +34,8 @@
 
 - (void)prepareLayout {
   [super prepareLayout];
+   NSArray *imageSections = [((id<DCKCollectionViewLayoutDelegate>)self.collectionView.dataSource) imageSectionsForCollectionView];
+  
   CGFloat collectionViewWidth = self.collectionView.frame.size.width;
   CGFloat horizontalSpacing = collectionViewWidth * 0.05f;
   CGFloat verticalSpacing = horizontalSpacing;
@@ -41,30 +43,35 @@
   CGFloat cellWidth = (collectionViewWidth - (horizontalSpacing * (numberOfColumns + 1))) / numberOfColumns;
   
   CGFloat currentXPosition = horizontalSpacing;
-  CGFloat currentYPosition = verticalSpacing;
-  NSUInteger numberOfSections = 0;
-  id dataSource = self.collectionView.dataSource;
-  if ([dataSource respondsToSelector:@selector(numberOfSectionsInCollectionView:)]) {
-    numberOfSections = [dataSource numberOfSectionsInCollectionView:self.collectionView];
-  }
+  CGFloat currentYPositionColA = verticalSpacing;
+  CGFloat currentYPositionColB = verticalSpacing;
+  NSUInteger numberOfSections = imageSections.count;
   NSMutableDictionary *mutableNodeForIndexPathDictionary = [NSMutableDictionary dictionary];
   for (NSUInteger section = 0; section < numberOfSections; ++section) {
-    NSUInteger numberOfItemsInSection = 0;
-    if ([dataSource respondsToSelector:@selector(collectionView:numberOfItemsInSection:)]) {
-      numberOfItemsInSection = [dataSource collectionView:self.collectionView numberOfItemsInSection:section];
-    }
+    NSUInteger numberOfItemsInSection = ((NSArray*)imageSections[section]).count;
     for (NSUInteger item = 0; item < numberOfItemsInSection; ++item) {
-
-      // Simple alternation pattern
+      
       DCKCollectionViewNode *node = [[DCKCollectionViewNode alloc] init];
-      node.frame = CGRectMake(currentXPosition, currentYPosition, cellWidth, 1.5f*cellWidth);
-      [mutableNodeForIndexPathDictionary setObject:node forKey:[NSIndexPath indexPathForRow:item inSection:section]];
-      if (item % 2) {
-        currentXPosition = horizontalSpacing;
-        currentYPosition += node.frame.size.height + verticalSpacing;
-      } else {
-        currentXPosition = cellWidth + (horizontalSpacing * 2.0f);
+      
+      // TODO: setup defines or parameters that can be overridden
+      static const CGFloat kHorizontalSpacing = 10.0f;
+      static const CGFloat kVerticalSpacing = 10.0f;
+      CGFloat cellHeight = 1.5f*cellWidth;
+      CGRect rect = [imageSections[section][item][@"title"] boundingRectWithSize:CGSizeMake(cellWidth - (kHorizontalSpacing * 2.0f), CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:[UIFont fontWithName:@"HelveticaNeue" size:14.0f]} context:nil];
+      if (rect.size.height > 0.0f) {
+        cellHeight += rect.size.height + (kVerticalSpacing * 2.0f) + 1.0f;
       }
+      
+      if (currentYPositionColA > currentYPositionColB) {
+        currentXPosition = cellWidth + (horizontalSpacing * 2.0f);
+        node.frame = CGRectMake(currentXPosition, currentYPositionColB, cellWidth, cellHeight);
+        currentYPositionColB += node.frame.size.height + verticalSpacing;
+      } else {
+        currentXPosition = horizontalSpacing;
+        node.frame = CGRectMake(currentXPosition, currentYPositionColA, cellWidth, cellHeight);
+        currentYPositionColA += node.frame.size.height + verticalSpacing;
+      }
+      [mutableNodeForIndexPathDictionary setObject:node forKey:[NSIndexPath indexPathForRow:item inSection:section]];
       
     }
   }
@@ -93,9 +100,9 @@
   CGFloat collectionViewWidth = self.collectionView.frame.size.width;
   CGFloat collectionViewHeight = 0.0f;
   for (DCKCollectionViewNode *node in self.nodeForIndexPath.allValues) {
-    if (node.frame.origin.y > collectionViewHeight) {
+    if (node.frame.origin.y + node.frame.size.height > collectionViewHeight) {
       // TODO: share vertical spacing value
-      collectionViewHeight = node.frame.origin.y + node.frame.size.height + (self.collectionView.frame.size.width * 0.05f);
+      collectionViewHeight = node.frame.origin.y + node.frame.size.height + (collectionViewWidth * 0.05f);
     }
   }
   return CGSizeMake(collectionViewWidth, collectionViewHeight);

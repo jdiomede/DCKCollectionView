@@ -31,7 +31,7 @@ static NSString * const reuseIdentifier = @"ExampleCollectionViewCell";
   [super viewDidLoad];
   [self.collectionView registerClass:[ExampleCollectionViewCell class] forCellWithReuseIdentifier:reuseIdentifier];
   self.title = @"Recent Photos on Flickr";
-  self.collectionView.backgroundColor = [UIColor whiteColor];
+  self.collectionView.backgroundColor = [UIColor colorWithRed:(233.0f/255.0f) green:(233.0f/255.0f) blue:(233.0f/255.0f) alpha:1.0f];
   self.collectionView.alwaysBounceVertical = YES;
   [self refreshImageUrls];
 }
@@ -59,7 +59,9 @@ static NSString * const reuseIdentifier = @"ExampleCollectionViewCell";
   ExampleCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
   if (![self.imageSections[indexPath.section][indexPath.row] isEqual:cell.ilkImageView.urlString]) {
     cell.ilkImageView.image = nil;
-    cell.ilkImageView.urlString = self.imageSections[indexPath.section][indexPath.row];
+    NSDictionary *params = self.imageSections[indexPath.section][indexPath.row];
+    cell.ilkImageView.urlString = params[@"photoUrl"];
+    cell.imageTitle.text = params[@"title"];
   }
   return cell;
 }
@@ -123,7 +125,8 @@ static NSString * const reuseIdentifier = @"ExampleCollectionViewCell";
                             [photo valueForKey:@"server"],
                             [photo valueForKey:@"id"],
                             [photo valueForKey:@"secret"]];
-      [mutableArray addObject:photoUrl];
+      NSString *title = [photo valueForKey:@"title"];
+      [mutableArray addObject:@{@"photoUrl":photoUrl, @"title":title}];
     }
     dispatch_async(dispatch_get_main_queue(), ^{
       self.imageSections = [NSArray arrayWithObject:mutableArray.copy];
@@ -135,7 +138,5 @@ static NSString * const reuseIdentifier = @"ExampleCollectionViewCell";
   }];
   [dataTask resume];
 }
-
-
 
 @end

@@ -12,6 +12,7 @@
 
 @interface ExampleCollectionViewCell : UICollectionViewCell
 
+@property (nonatomic, strong) UILabel *imageTitle;
 @property (nonatomic, strong) ILKImageView *ilkImageView;
 
 @end
