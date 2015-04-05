@@ -22,10 +22,9 @@ static const CGFloat kVerticalSpacing = 10.0f;
 - (instancetype)initWithFrame:(CGRect)frame {
   self = [super initWithFrame:frame];
   if (self) {
+    self.translatesAutoresizingMaskIntoConstraints = NO;
     _ilkImageView = [[ILKImageView alloc] initWithFrame:CGRectZero];
     _ilkImageView.translatesAutoresizingMaskIntoConstraints = NO;
-    _ilkImageView.contentMode = UIViewContentModeScaleAspectFill;
-    _ilkImageView.clipsToBounds = YES;
     [self.contentView addSubview:_ilkImageView];
     _descriptionBackgroundImageView = [[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"#000000_100px_rounded_5px"] resizableImageWithCapInsets:UIEdgeInsetsMake(5.0f, 5.0f, 5.0f, 5.0f)]];
     _descriptionBackgroundImageView.translatesAutoresizingMaskIntoConstraints = NO;

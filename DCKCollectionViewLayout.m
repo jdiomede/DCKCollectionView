@@ -42,7 +42,7 @@
   CGFloat numberOfColumns = 2.0f;
   CGFloat cellWidth = (collectionViewWidth - (horizontalSpacing * (numberOfColumns + 1))) / numberOfColumns;
   
-  CGFloat currentXPosition = horizontalSpacing;
+  CGFloat currentXPosition = 0.0f;
   CGFloat currentYPositionColA = verticalSpacing;
   CGFloat currentYPositionColB = verticalSpacing;
   NSUInteger numberOfSections = imageSections.count;

@@ -60,7 +60,8 @@ static NSString * const reuseIdentifier = @"ExampleCollectionViewCell";
   if (![self.imageSections[indexPath.section][indexPath.row] isEqual:cell.ilkImageView.urlString]) {
     cell.ilkImageView.image = nil;
     NSDictionary *params = self.imageSections[indexPath.section][indexPath.row];
-    cell.ilkImageView.urlString = params[@"photoUrl"];
+    UICollectionViewLayoutAttributes *attributes = [self.collectionViewLayout layoutAttributesForItemAtIndexPath:indexPath];
+    [cell.ilkImageView setUrlString:params[@"photoUrl"] withAttributes:@{ILKImageSizeAttributeName:[NSValue valueWithCGSize:attributes.frame.size], ILKCornerRadiusAttributeName:@(3.0f), ILKRectCornerAttributeName:@(ILKRectCornerTopLeft|ILKRectCornerTopRight)}];
     cell.imageTitle.text = params[@"title"];
   }
   return cell;
@@ -120,7 +121,7 @@ static NSString * const reuseIdentifier = @"ExampleCollectionViewCell";
     NSMutableArray *mutableArray = [NSMutableArray array];
     for (NSDictionary *photo in photoArray) {
       //http://farm{farm-id}.staticflickr.com/{server-id}/{id}_{secret}.jpg
-      NSString *photoUrl = [NSString stringWithFormat:@"http://farm%@.staticflickr.com/%@/%@_%@.jpg",
+      NSString *photoUrl = [NSString stringWithFormat:@"http://farm%@.staticflickr.com/%@/%@_%@_b.jpg",
                             [photo valueForKey:@"farm"],
                             [photo valueForKey:@"server"],
                             [photo valueForKey:@"id"],
