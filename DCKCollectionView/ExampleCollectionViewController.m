@@ -75,35 +75,6 @@ static NSString * const reuseIdentifier = @"ExampleCollectionViewCell";
 
 #pragma mark <UICollectionViewDelegate>
 
-/*
-// Uncomment this method to specify if the specified item should be highlighted during tracking
-- (BOOL)collectionView:(UICollectionView *)collectionView shouldHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
-	return YES;
-}
-*/
-
-/*
-// Uncomment this method to specify if the specified item should be selected
-- (BOOL)collectionView:(UICollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    return YES;
-}
-*/
-
-/*
-// Uncomment these methods to specify if an action menu should be displayed for the specified item, and react to actions performed on the item
-- (BOOL)collectionView:(UICollectionView *)collectionView shouldShowMenuForItemAtIndexPath:(NSIndexPath *)indexPath {
-	return NO;
-}
-
-- (BOOL)collectionView:(UICollectionView *)collectionView canPerformAction:(SEL)action forItemAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender {
-	return NO;
-}
-
-- (void)collectionView:(UICollectionView *)collectionView performAction:(SEL)action forItemAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender {
-	
-}
-*/
-
 - (void)refreshImageUrls {
   NSString *httpHostAndPath = @"https://api.flickr.com/services/rest";
   NSString *httpUrlParamters = [NSString stringWithFormat:@"%@%@%@%@",
@@ -121,7 +92,7 @@ static NSString * const reuseIdentifier = @"ExampleCollectionViewCell";
     NSMutableArray *mutableArray = [NSMutableArray array];
     for (NSDictionary *photo in photoArray) {
       //http://farm{farm-id}.staticflickr.com/{server-id}/{id}_{secret}.jpg
-      NSString *photoUrl = [NSString stringWithFormat:@"http://farm%@.staticflickr.com/%@/%@_%@_b.jpg",
+      NSString *photoUrl = [NSString stringWithFormat:@"http://farm%@.staticflickr.com/%@/%@_%@.jpg",
                             [photo valueForKey:@"farm"],
                             [photo valueForKey:@"server"],
                             [photo valueForKey:@"id"],

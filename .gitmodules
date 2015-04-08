@@ -1,3 +1,4 @@
 [submodule "ILKImageLoader"]
 	path = ILKImageLoader
 	url = https://github.com/jdiomede/ILKImageLoader
+	branch = master
