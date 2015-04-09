@@ -67,6 +67,7 @@
 		5C6444061ACC8DB9005FEE28 /* ExampleCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExampleCollectionViewCell.h; sourceTree = "<group>"; };
 		5C6444071ACC8DB9005FEE28 /* ExampleCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExampleCollectionViewCell.m; sourceTree = "<group>"; };
 		5C6444591ACCA093005FEE28 /* ILKImageLoader.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ILKImageLoader.xcodeproj; path = ILKImageLoader/ILKImageLoader.xcodeproj; sourceTree = "<group>"; };
+		5CCE01E81AD5B5E100F44D9C /* DCKCollectionViewDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DCKCollectionViewDefines.h; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,6 +113,7 @@
 			children = (
 				5C6443D51ACA152D005FEE28 /* AppDelegate.h */,
 				5C6443D61ACA152D005FEE28 /* AppDelegate.m */,
+				5CCE01E81AD5B5E100F44D9C /* DCKCollectionViewDefines.h */,
 				5C6443FD1ACA4CD0005FEE28 /* DCKCollectionViewLayout.h */,
 				5C6443FE1ACA4CD0005FEE28 /* DCKCollectionViewLayout.m */,
 				5C6444061ACC8DB9005FEE28 /* ExampleCollectionViewCell.h */,

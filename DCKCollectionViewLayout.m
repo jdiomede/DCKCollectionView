@@ -8,6 +8,8 @@
 
 #import "DCKCollectionViewLayout.h"
 
+#import "DCKCollectionViewDefines.h"
+
 @interface DCKCollectionViewNode : NSObject
 
 @property (nonatomic, assign) NSUInteger count;
@@ -36,17 +38,20 @@
 
 - (void)prepareLayout {
   [super prepareLayout];
-   NSArray *imageSections = [((id<DCKCollectionViewLayoutDelegate>)self.collectionView.dataSource) imageSectionsForCollectionView];
+  NSArray *imageSections = [((id<DCKCollectionViewLayoutDelegate>)self.collectionView.dataSource) imageSectionsForCollectionView];
   
   CGFloat collectionViewWidth = self.collectionView.frame.size.width;
   CGFloat horizontalSpacing = collectionViewWidth * 0.025f;
   CGFloat verticalSpacing = horizontalSpacing;
-  NSUInteger numberOfColumns = 3;
+  
+  NSUInteger numberOfColumns = 1;
+  
   CGFloat cellWidth = (collectionViewWidth - (horizontalSpacing * (numberOfColumns + 1))) / numberOfColumns;
   
   NSUInteger numberOfSections = imageSections.count;
   NSMutableDictionary *mutableNodeForIndexPathDictionary = [NSMutableDictionary dictionary];
   for (NSUInteger section = 0; section < numberOfSections; ++section) {
+    // initialize nodes array for section
     NSMutableArray *nodes = [NSMutableArray array];
     for (NSUInteger i = 0; i < numberOfColumns; ++i) {
       DCKCollectionViewNode *node = [[DCKCollectionViewNode alloc] init];
@@ -55,19 +60,15 @@
     }
     NSUInteger numberOfItemsInSection = ((NSArray*)imageSections[section]).count;
     for (NSUInteger item = 0; item < numberOfItemsInSection; ++item) {
-      
       DCKCollectionViewNode *node = [[DCKCollectionViewNode alloc] init];
       node.count = 1;
-      
-      // TODO: setup defines or parameters that can be overridden
-      static const CGFloat kHorizontalSpacing = 10.0f;
-      static const CGFloat kVerticalSpacing = 10.0f;
+      // calculate height based on title text
       CGFloat cellHeight = 1.5f*cellWidth;
-      CGRect rect = [imageSections[section][item][@"title"] boundingRectWithSize:CGSizeMake(cellWidth - (kHorizontalSpacing * 2.0f), CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:[UIFont fontWithName:@"HelveticaNeue" size:14.0f]} context:nil];
+      CGRect rect = [imageSections[section][item][@"title"] boundingRectWithSize:CGSizeMake(cellWidth - (kDescriptionHorizontalSpacing * 2.0f), CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:DESCRIPTION_FONT()} context:nil];
       if (rect.size.height > 0.0f) {
-        cellHeight += rect.size.height + (kVerticalSpacing * 2.0f) + 1.0f;
+        cellHeight += rect.size.height + (kDescriptionVerticalSpacing * 2.0f) + 1.0f;
       }
-      
+      // add cell to the shortest column
       __block NSUInteger shortestColumnIndex = 0;
       __block CGFloat shortestYPosition = MAXFLOAT;
       [nodes enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
@@ -80,15 +81,14 @@
       }];
       CGFloat xPosition = horizontalSpacing + shortestColumnIndex * (horizontalSpacing + cellWidth);
       node.frame = CGRectMake(xPosition, shortestYPosition, cellWidth, cellHeight);
-      
+      // update nodes dictionary
       [mutableNodeForIndexPathDictionary setObject:node forKey:[NSIndexPath indexPathForRow:item inSection:section]];
-      
+      // update nodes array
       node.previousNode = nodes[shortestColumnIndex];
       node.count += node.previousNode.count;
       nodes[shortestColumnIndex] = node;
-      
     }
-    
+    // determine maximum height between all columns
     DCKCollectionViewNode *node = nodes[0];
     __block CGFloat maxHeight = node.frame.origin.y + node.frame.size.height;
     [nodes enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
@@ -97,7 +97,7 @@
         maxHeight = node.frame.origin.y + node.frame.size.height;
       }
     }];
-    
+    // add pixels to each cell to align all columns in section
     [nodes enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
       DCKCollectionViewNode *node = (DCKCollectionViewNode*)obj;
       CGFloat diff = (maxHeight - (node.frame.origin.y + node.frame.size.height))/node.count;
@@ -111,7 +111,6 @@
         }
       }
     }];
-
   }
   self.nodeForIndexPath = mutableNodeForIndexPathDictionary.copy;
 }

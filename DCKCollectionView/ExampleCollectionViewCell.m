@@ -8,8 +8,7 @@
 
 #import "ExampleCollectionViewCell.h"
 
-static const CGFloat kHorizontalSpacing = 10.0f;
-static const CGFloat kVerticalSpacing = 10.0f;
+#import "DCKCollectionViewDefines.h"
 
 @interface ExampleCollectionViewCell()
 @property (nonatomic, strong) UIView *descriptionView;
@@ -22,7 +21,6 @@ static const CGFloat kVerticalSpacing = 10.0f;
 - (instancetype)initWithFrame:(CGRect)frame {
   self = [super initWithFrame:frame];
   if (self) {
-    self.translatesAutoresizingMaskIntoConstraints = NO;
     _ilkImageView = [[ILKImageView alloc] initWithFrame:CGRectZero];
     _ilkImageView.translatesAutoresizingMaskIntoConstraints = NO;
     [self.contentView addSubview:_ilkImageView];
@@ -33,7 +31,7 @@ static const CGFloat kVerticalSpacing = 10.0f;
     [_descriptionView addSubview:_descriptionBackgroundImageView];
     _imageTitle = [[UILabel alloc] initWithFrame:CGRectZero];
     _imageTitle.translatesAutoresizingMaskIntoConstraints = NO;
-    _imageTitle.font = [UIFont fontWithName:@"HelveticaNeue" size:14.0f];
+    _imageTitle.font = DESCRIPTION_FONT();
     _imageTitle.textColor = [UIColor blackColor];
     _imageTitle.numberOfLines = 0;
     [_descriptionView addSubview:_imageTitle];
@@ -41,8 +39,8 @@ static const CGFloat kVerticalSpacing = 10.0f;
     NSDictionary *views = @{@"ilkImageView":_ilkImageView, @"descriptionView":_descriptionView, @"descriptionImageBackgroundView":_descriptionBackgroundImageView, @"imageTitle":_imageTitle};
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[descriptionImageBackgroundView]|" options:0 metrics:nil views:views]];
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[descriptionImageBackgroundView]|" options:0 metrics:nil views:views]];
-    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-padding-[imageTitle]-padding-|" options:0 metrics:@{@"padding":@(kHorizontalSpacing)} views:views]];
-    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-padding-[imageTitle]-padding-|" options:0 metrics:@{@"padding":@(kVerticalSpacing)} views:views]];
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-padding-[imageTitle]-padding-|" options:0 metrics:@{@"padding":@(kDescriptionHorizontalSpacing)} views:views]];
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-padding-[imageTitle]-padding-|" options:0 metrics:@{@"padding":@(kDescriptionVerticalSpacing)} views:views]];
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[ilkImageView]|" options:0 metrics:nil views:views]];
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[descriptionView]|" options:0 metrics:nil views:views]];
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[ilkImageView][descriptionView]|" options:0 metrics:nil views:views]];
@@ -54,13 +52,17 @@ static const CGFloat kVerticalSpacing = 10.0f;
 }
 
 - (void)updateConstraints {
-  // TODO: share font information
-  CGRect rect = [self.imageTitle.text boundingRectWithSize:CGSizeMake(self.contentView.frame.size.width - (kHorizontalSpacing * 2.0f), CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:self.imageTitle.font} context:nil];
+  // recalculate description view height based on new title text
+  CGRect rect = [self.imageTitle.text boundingRectWithSize:CGSizeMake(self.contentView.frame.size.width - (kDescriptionHorizontalSpacing * 2.0f), CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:self.imageTitle.font} context:nil];
   if (rect.size.height > 0.0f) {
-    self.dynamicDescriptionViewHeightConstraint.constant = rect.size.height + (kVerticalSpacing * 2.0f) + 1.0f;
+    self.dynamicDescriptionViewHeightConstraint.constant = rect.size.height + (kDescriptionVerticalSpacing * 2.0f) + 1.0f;
   } else {
     self.dynamicDescriptionViewHeightConstraint.constant = 0.0f;
   }
+  // increase frame to avoid unecessary layout conflicts after constraints have been updated but before size changes
+  CGRect frame = self.contentView.frame;
+  frame.size.height += self.dynamicDescriptionViewHeightConstraint.constant;
+  self.contentView.frame = frame;
   [super updateConstraints];
 }
 

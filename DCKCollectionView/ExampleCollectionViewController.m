@@ -8,11 +8,13 @@
 
 #import "ExampleCollectionViewController.h"
 
+#import "DCKCollectionViewDefines.h"
 #import "DCKCollectionViewLayout.h"
 #import "ExampleCollectionViewCell.h"
 
 @interface ExampleCollectionViewController () <DCKCollectionViewLayoutDelegate>
 @property (nonatomic, strong) NSArray *imageSections;
+@property (nonatomic, strong) UIRefreshControl *refreshControl;
 @end
 
 @implementation ExampleCollectionViewController
@@ -29,6 +31,9 @@ static NSString * const reuseIdentifier = @"ExampleCollectionViewCell";
 
 - (void)viewDidLoad {
   [super viewDidLoad];
+  self.refreshControl = [[UIRefreshControl alloc] init];
+  [self.refreshControl addTarget:self action:@selector(refreshImageUrls) forControlEvents:UIControlEventValueChanged];
+  [self.collectionView addSubview:self.refreshControl];
   [self.collectionView registerClass:[ExampleCollectionViewCell class] forCellWithReuseIdentifier:reuseIdentifier];
   self.title = @"Recent Photos on Flickr";
   self.collectionView.backgroundColor = [UIColor colorWithRed:(233.0f/255.0f) green:(233.0f/255.0f) blue:(233.0f/255.0f) alpha:1.0f];
@@ -43,37 +48,6 @@ static NSString * const reuseIdentifier = @"ExampleCollectionViewCell";
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
   [self.collectionViewLayout invalidateLayout];
 }
-
-#pragma mark <UICollectionViewDataSource>
-
-- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
-  return self.imageSections.count;
-}
-
-
-- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-  return ((NSArray*)self.imageSections[section]).count;
-}
-
-- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-  ExampleCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
-  if (![self.imageSections[indexPath.section][indexPath.row] isEqual:cell.ilkImageView.urlString]) {
-    cell.ilkImageView.image = nil;
-    NSDictionary *params = self.imageSections[indexPath.section][indexPath.row];
-    UICollectionViewLayoutAttributes *attributes = [self.collectionViewLayout layoutAttributesForItemAtIndexPath:indexPath];
-    [cell.ilkImageView setUrlString:params[@"photoUrl"] withAttributes:@{ILKImageSizeAttributeName:[NSValue valueWithCGSize:attributes.frame.size], ILKCornerRadiusAttributeName:@(3.0f), ILKRectCornerAttributeName:@(ILKRectCornerTopLeft|ILKRectCornerTopRight)}];
-    cell.imageTitle.text = params[@"title"];
-  }
-  return cell;
-}
-
-#pragma mark <DCKCollectionViewLayoutDelegate>
-
-- (NSArray *)imageSectionsForCollectionView {
-  return self.imageSections;
-}
-
-#pragma mark <UICollectionViewDelegate>
 
 - (void)refreshImageUrls {
   NSString *httpHostAndPath = @"https://api.flickr.com/services/rest";
@@ -101,6 +75,7 @@ static NSString * const reuseIdentifier = @"ExampleCollectionViewCell";
       [mutableArray addObject:@{@"photoUrl":photoUrl, @"title":title}];
     }
     dispatch_async(dispatch_get_main_queue(), ^{
+      [self.refreshControl endRefreshing];
       self.imageSections = [NSArray arrayWithObject:mutableArray.copy];
       [self.collectionView performBatchUpdates:^{
         [self.collectionView deleteSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, self.collectionView.numberOfSections)]];
@@ -109,6 +84,41 @@ static NSString * const reuseIdentifier = @"ExampleCollectionViewCell";
     });
   }];
   [dataTask resume];
+}
+
+#pragma mark <UICollectionViewDataSource>
+
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
+  return self.imageSections.count;
+}
+
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
+  return ((NSArray*)self.imageSections[section]).count;
+}
+
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+  ExampleCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
+  if (![self.imageSections[indexPath.section][indexPath.row] isEqual:cell.ilkImageView.urlString]) {
+    // clear image view
+    cell.ilkImageView.image = nil;
+    NSDictionary *params = self.imageSections[indexPath.section][indexPath.row];
+    // calculate imageView height based on <cell attribute height> - <description view height>
+    UICollectionViewLayoutAttributes *attributes = [self.collectionViewLayout layoutAttributesForItemAtIndexPath:indexPath];
+    CGRect rect = [params[@"title"] boundingRectWithSize:CGSizeMake(cell.frame.size.width - (kDescriptionHorizontalSpacing * 2.0f), CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:DESCRIPTION_FONT()} context:nil];
+    CGFloat imageHeight = attributes.frame.size.height - rect.size.height;
+    [cell.ilkImageView setUrlString:params[@"photoUrl"] withAttributes:@{ILKImageSizeAttributeName:[NSValue valueWithCGSize:CGSizeMake(attributes.frame.size.width, imageHeight)], ILKCornerRadiusAttributeName:@(3.0f), ILKRectCornerAttributeName:@(ILKRectCornerTopLeft|ILKRectCornerTopRight)}];
+    // set title text
+    cell.imageTitle.text = params[@"title"];
+  }
+  
+  return cell;
+}
+
+#pragma mark <DCKCollectionViewLayoutDelegate>
+
+- (NSArray *)imageSectionsForCollectionView {
+  return self.imageSections;
 }
 
 @end
