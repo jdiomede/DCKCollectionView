@@ -8,8 +8,6 @@
 
 #import "DCKCollectionViewLayout.h"
 
-#import "DCKCollectionViewDefines.h"
-
 @interface DCKCollectionViewNode : NSObject
 
 @property (nonatomic, assign) NSUInteger count;
@@ -38,15 +36,18 @@
 
 - (void)prepareLayout {
   [super prepareLayout];
-  NSArray *imageSections = [((id<DCKCollectionViewLayoutDelegate>)self.collectionView.dataSource) imageSectionsForCollectionView];
+  id<DCKCollectionViewLayoutDelegate> delegate = (id<DCKCollectionViewLayoutDelegate>)self.collectionView.delegate;
+  NSArray *imageSections = [delegate imageSectionsForCollectionView];
   
+  // load dynamic parameters
+  NSUInteger numberOfColumns = [delegate numberOfColumnsForCollectionView];
   CGFloat collectionViewWidth = self.collectionView.frame.size.width;
-  CGFloat horizontalSpacing = collectionViewWidth * 0.025f;
-  CGFloat verticalSpacing = horizontalSpacing;
+  CGFloat collectionViewSpacing = [delegate marginsForCollectionView];
+  CGFloat cellMargins = [delegate marginsForCollectionViewCells];
+  UIFont *titleTextFont = [delegate fontForTitleText];
   
-  NSUInteger numberOfColumns = 1;
-  
-  CGFloat cellWidth = (collectionViewWidth - (horizontalSpacing * (numberOfColumns + 1))) / numberOfColumns;
+  // compute cell width
+  CGFloat cellWidth = (collectionViewWidth - (collectionViewSpacing * (numberOfColumns + 1))) / numberOfColumns;
   
   NSUInteger numberOfSections = imageSections.count;
   NSMutableDictionary *mutableNodeForIndexPathDictionary = [NSMutableDictionary dictionary];
@@ -55,7 +56,7 @@
     NSMutableArray *nodes = [NSMutableArray array];
     for (NSUInteger i = 0; i < numberOfColumns; ++i) {
       DCKCollectionViewNode *node = [[DCKCollectionViewNode alloc] init];
-      node.frame = CGRectMake(horizontalSpacing, verticalSpacing, 0.0f, 0.0f);
+      node.frame = CGRectMake(collectionViewSpacing, collectionViewSpacing, 0.0f, 0.0f);
       [nodes addObject:node];
     }
     NSUInteger numberOfItemsInSection = ((NSArray*)imageSections[section]).count;
@@ -64,22 +65,22 @@
       node.count = 1;
       // calculate height based on title text
       CGFloat cellHeight = 1.5f*cellWidth;
-      CGRect rect = [imageSections[section][item][@"title"] boundingRectWithSize:CGSizeMake(cellWidth - (kDescriptionHorizontalSpacing * 2.0f), CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:DESCRIPTION_FONT()} context:nil];
+      CGRect rect = [imageSections[section][item][@"title"] boundingRectWithSize:CGSizeMake(cellWidth - (cellMargins * 2.0f), CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:titleTextFont} context:nil];
       if (rect.size.height > 0.0f) {
-        cellHeight += rect.size.height + (kDescriptionVerticalSpacing * 2.0f) + 1.0f;
+        cellHeight += rect.size.height + ([delegate marginsForCollectionViewCells] * 2.0f) + 1.0f;
       }
       // add cell to the shortest column
       __block NSUInteger shortestColumnIndex = 0;
       __block CGFloat shortestYPosition = MAXFLOAT;
       [nodes enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         DCKCollectionViewNode *node = (DCKCollectionViewNode*)obj;
-        CGFloat yPosition = node.frame.origin.y + node.frame.size.height + verticalSpacing;
+        CGFloat yPosition = node.frame.origin.y + node.frame.size.height + collectionViewSpacing;
         if (yPosition < shortestYPosition) {
           shortestColumnIndex = idx;
           shortestYPosition = yPosition;
         }
       }];
-      CGFloat xPosition = horizontalSpacing + shortestColumnIndex * (horizontalSpacing + cellWidth);
+      CGFloat xPosition = collectionViewSpacing + shortestColumnIndex * (collectionViewSpacing + cellWidth);
       node.frame = CGRectMake(xPosition, shortestYPosition, cellWidth, cellHeight);
       // update nodes dictionary
       [mutableNodeForIndexPathDictionary setObject:node forKey:[NSIndexPath indexPathForRow:item inSection:section]];

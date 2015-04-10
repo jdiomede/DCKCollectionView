@@ -8,8 +8,6 @@
 
 #import "ExampleCollectionViewCell.h"
 
-#import "DCKCollectionViewDefines.h"
-
 @interface ExampleCollectionViewCell()
 @property (nonatomic, strong) UIView *descriptionView;
 @property (nonatomic, strong) UIImageView *descriptionBackgroundImageView;
@@ -17,6 +15,10 @@
 @end
 
 @implementation ExampleCollectionViewCell
+
++ (BOOL)requiresConstraintBasedLayout {
+  return YES;
+}
 
 - (instancetype)initWithFrame:(CGRect)frame {
   self = [super initWithFrame:frame];
@@ -31,7 +33,6 @@
     [_descriptionView addSubview:_descriptionBackgroundImageView];
     _imageTitle = [[UILabel alloc] initWithFrame:CGRectZero];
     _imageTitle.translatesAutoresizingMaskIntoConstraints = NO;
-    _imageTitle.font = DESCRIPTION_FONT();
     _imageTitle.textColor = [UIColor blackColor];
     _imageTitle.numberOfLines = 0;
     [_descriptionView addSubview:_imageTitle];
@@ -39,8 +40,9 @@
     NSDictionary *views = @{@"ilkImageView":_ilkImageView, @"descriptionView":_descriptionView, @"descriptionImageBackgroundView":_descriptionBackgroundImageView, @"imageTitle":_imageTitle};
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[descriptionImageBackgroundView]|" options:0 metrics:nil views:views]];
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[descriptionImageBackgroundView]|" options:0 metrics:nil views:views]];
-    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-padding-[imageTitle]-padding-|" options:0 metrics:@{@"padding":@(kDescriptionHorizontalSpacing)} views:views]];
-    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-padding-[imageTitle]-padding-|" options:0 metrics:@{@"padding":@(kDescriptionVerticalSpacing)} views:views]];
+    // TODO: remove hard coded margins
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-padding-[imageTitle]-padding-|" options:0 metrics:@{@"padding":@(10.0f)} views:views]];
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-padding-[imageTitle]-padding-|" options:0 metrics:@{@"padding":@(10.0f)} views:views]];
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[ilkImageView]|" options:0 metrics:nil views:views]];
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[descriptionView]|" options:0 metrics:nil views:views]];
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[ilkImageView][descriptionView]|" options:0 metrics:nil views:views]];
@@ -52,15 +54,16 @@
 }
 
 - (void)updateConstraints {
+  // TODO: remove hard coded margins
   // recalculate description view height based on new title text
-  CGRect rect = [self.imageTitle.text boundingRectWithSize:CGSizeMake(self.contentView.frame.size.width - (kDescriptionHorizontalSpacing * 2.0f), CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:self.imageTitle.font} context:nil];
+  CGRect rect = [self.imageTitle.text boundingRectWithSize:CGSizeMake(self.frame.size.width - (10.0f * 2.0f), CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:self.imageTitle.font} context:nil];
   if (rect.size.height > 0.0f) {
-    self.dynamicDescriptionViewHeightConstraint.constant = rect.size.height + (kDescriptionVerticalSpacing * 2.0f) + 1.0f;
+    self.dynamicDescriptionViewHeightConstraint.constant = rect.size.height + (10.0f * 2.0f) + 1.0f;
   } else {
     self.dynamicDescriptionViewHeightConstraint.constant = 0.0f;
   }
   // increase frame to avoid unecessary layout conflicts after constraints have been updated but before size changes
-  CGRect frame = self.contentView.frame;
+  CGRect frame = self.frame;
   frame.size.height += self.dynamicDescriptionViewHeightConstraint.constant;
   self.contentView.frame = frame;
   [super updateConstraints];

@@ -10,7 +10,11 @@
 
 @protocol DCKCollectionViewLayoutDelegate <NSObject>
 
-- (NSArray*)imageSectionsForCollectionView;
+- (NSArray*)imageSectionsForCollectionView; // expose data to access text content
+- (NSUInteger)numberOfColumnsForCollectionView; // dyanmic based on screen size and device
+- (CGFloat)marginsForCollectionView; // space from top, bottom, left, and right assumed similar
+- (CGFloat)marginsForCollectionViewCells; // assumes x and y are similar
+- (UIFont*)fontForTitleText; // potentially dynamic based on screen size and device
 
 @end
 
