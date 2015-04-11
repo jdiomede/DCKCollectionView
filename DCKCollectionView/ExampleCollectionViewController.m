@@ -24,7 +24,14 @@ static NSString * const reuseIdentifier = @"ExampleCollectionViewCell";
 - (instancetype)initWithCollectionViewLayout:(UICollectionViewLayout *)layout {
   self = [super initWithCollectionViewLayout:layout];
   if (self) {
-    _numberOfColumns = 1;
+    CGFloat width = self.collectionView.frame.size.width;
+    if (width > 768.0f) {
+      _numberOfColumns = 3;
+    } else if (width > 320.0f) {
+      _numberOfColumns = 2;
+    } else {
+      _numberOfColumns = 1;
+    }
     _imageSections = [NSArray array];
   }
   return self;
@@ -56,7 +63,6 @@ static NSString * const reuseIdentifier = @"ExampleCollectionViewCell";
   if (self.numberOfColumns > 1) {
     self.numberOfColumns--;
     [self.collectionViewLayout invalidateLayout]; // force layout
-//    [self.collectionView reloadData]; // reload images at new size
     [self.collectionView reloadItemsAtIndexPaths:self.collectionView.indexPathsForVisibleItems];// reload images at new size
   }
 }
@@ -65,7 +71,6 @@ static NSString * const reuseIdentifier = @"ExampleCollectionViewCell";
   if (self.numberOfColumns < 4) {
     self.numberOfColumns++;
     [self.collectionViewLayout invalidateLayout]; // force layout
-//    [self.collectionView reloadData]; // reload images at new size
     [self.collectionView reloadItemsAtIndexPaths:self.collectionView.indexPathsForVisibleItems];// reload images at new size
   }
 }
@@ -145,16 +150,30 @@ static NSString * const reuseIdentifier = @"ExampleCollectionViewCell";
   return self.numberOfColumns;
 }
 
+// Scaled based on device screen width, iPhone/iPad
+
 - (CGFloat)marginsForCollectionView {
-  return self.collectionView.frame.size.width * 0.025f;
+  CGFloat multiplier = 0.025f;
+  if (self.collectionView.frame.size.width >= 768.0f) {
+    multiplier /= 1.5f;
+  }
+  return self.collectionView.frame.size.width * multiplier;
 }
 
 - (CGFloat)marginsForCollectionViewCells {
-  return 10.0f;
+  CGFloat spacing = 10.0f;
+  if (self.collectionView.frame.size.width >= 768.0f) {
+    spacing *= 1.5f;
+  }
+  return spacing;
 }
 
 - (UIFont *)fontForTitleText {
-  return [UIFont fontWithName:@"HelveticaNeue" size:(14.0f-7.0f*self.numberOfColumns/4.0f)]; // some random font scaling
+  CGFloat fontSize = 14.0f;
+  if (self.collectionView.frame.size.width >= 768.0f) {
+    fontSize *= 1.5f;
+  }
+  return [UIFont fontWithName:@"HelveticaNeue" size:(fontSize-(fontSize*self.numberOfColumns/8.0f))];
 }
 
 @end
