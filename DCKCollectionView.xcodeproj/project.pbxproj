@@ -14,6 +14,7 @@
 		5C6443FF1ACA4CD0005FEE28 /* DCKCollectionViewLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C6443FE1ACA4CD0005FEE28 /* DCKCollectionViewLayout.m */; };
 		5C6444081ACC8DB9005FEE28 /* ExampleCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C6444071ACC8DB9005FEE28 /* ExampleCollectionViewCell.m */; };
 		5C6444671ACCA369005FEE28 /* libImageLoaderKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C6444661ACCA365005FEE28 /* libImageLoaderKit.a */; };
+		5CC828351AE0AAF80085446B /* Launch Screen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5CC828341AE0AAF80085446B /* Launch Screen.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,6 +55,7 @@
 		5C6444061ACC8DB9005FEE28 /* ExampleCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExampleCollectionViewCell.h; sourceTree = "<group>"; };
 		5C6444071ACC8DB9005FEE28 /* ExampleCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExampleCollectionViewCell.m; sourceTree = "<group>"; };
 		5C6444591ACCA093005FEE28 /* ILKImageLoader.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ILKImageLoader.xcodeproj; path = ILKImageLoader/ILKImageLoader.xcodeproj; sourceTree = "<group>"; };
+		5CC828341AE0AAF80085446B /* Launch Screen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "Launch Screen.xib"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,6 +99,7 @@
 				5C6443F71ACA154A005FEE28 /* ExampleCollectionViewController.h */,
 				5C6443F81ACA154A005FEE28 /* ExampleCollectionViewController.m */,
 				5C6443DE1ACA152D005FEE28 /* Images.xcassets */,
+				5CC828341AE0AAF80085446B /* Launch Screen.xib */,
 				5C6443D11ACA152D005FEE28 /* Supporting Files */,
 			);
 			path = DCKCollectionView;
@@ -202,6 +205,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5C6443DF1ACA152D005FEE28 /* Images.xcassets in Resources */,
+				5CC828351AE0AAF80085446B /* Launch Screen.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
